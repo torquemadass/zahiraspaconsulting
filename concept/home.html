@@ -4,29 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zahira - Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="icon" type="icon" href="/public/zahira---home-favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div class="relative h-screen bg-cover bg-center font-sf-pro" style="background-image: url(/public/home-hero-bg.jpg);">
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-        <nav class=" absolute top-0 left-0 w-full bg-[#180F00] text-white px-8 py-4">
-            <div class="flex justify-between items-center">
-                <a href="#">
-                    <img src="/public/zahira logo kecil.png" alt="zahira-logo" class="h-10"></a>
-                <ul class="flex space-x-8">
-                    <li><a href="#" class="hover:text-gray-300">Home</a></li>
-                    <li><a href="hover:text-gray-300">About Us</a></li>
-                    <li><a href="hover:text-gray-300">Our Business</a></li>
-                    <li><a href="hover:text-gray-300">Contact Us</a></li>
-                </ul>
-            </div>
-        </nav>
-        <div class="relative z-10 flex items-center justify-center h-full text-center text-white px-6">
-            <div>
-              <h1 class="text-5xl font-bold mb-4">Training & Consulting Spa and Skin Care</h1>
-              <p class="text-lg mb-6">Rejuvenate your body and mind with our expert services.</p>
+    <nav class=" absolute top-0 left-0 w-full bg-[#180F00] text-white px-8 py-4 rounded-[6px]">
+        <div class="flex justify-between items-center">
+            <a href="#">
+                <img src="/public/zahira logo kecil.png" alt="zahira-logo" class="h-10"></a>
+            <ul class="flex space-x-8">
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="hover:text-gray-300">About Us</a></li>
+                <li><a href="hover:text-gray-300">Our Business</a></li>
+                <li><a href="hover:text-gray-300">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+    <section class="relative h-screen">
+        <!-- Carousel -->
+        <div id="CarouselExampleIndicators" class="carousel slide h-full" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1">
+                <li data-target="#carouselExampleIndicators" data-slide-to="2">
+            </ol>
+            <div class="carousel-inner h-full">
+                <div class="carousel-item active">
+                    <img class="d-block w-100 h-full object-cover" src="/public/home-hero-bg.jpg" alt="home-hero-bg-1">
+                </div>
             </div>
         </div>
+    </section>
+
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="relative z-10 flex items-center justify-center h-full text-center text-white px-6">
+        <div>
+            <h1 class="text-5xl font-bold mb-4">Training & Consulting Spa and Skin Care</h1>
+            <p class="text-lg mb-6">Rejuvenate your body and mind with our expert services.</p>
+            <a href="#contact" class="bg-yellow-500 text-white py-2 px-6 rounded-lg hover:bg-yellow-600 transition""></a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>
