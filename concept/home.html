@@ -1,227 +1,341 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+< lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zahira - Home</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zahira — Home</title>
+
+  <!-- Preload LCP hero image -->
+  <link rel="preload" as="image" href="/public/home-hero-11.jpg">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- AOS (optional) -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
   <link rel="icon" type="image/x-icon" href="/public/zahira---home-favicon.ico">
+
   <style>
-    html {
-      scroll-behavior: smooth;
+    :root{
+      --brand-yellow: #d9c76a;
+      --bg-about: #fdfbf5;
+      --text-dark: #222;
+      --nav-bg: rgba(24,15,0,0.85);
     }
 
-    /* Hero Section */
-    #home {
-      position: relative;
-      height: 100vh;
-      clip-path: ellipse(100% 60% at 50% 40%);
-      z-index: 2;
-    }
+    html { scroll-behavior: smooth; }
+    body { background: white; }
 
-    #home::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100px; 
-      background: linear-gradient(
-        to bottom, 
-        rgba(253, 251, 245, 0) 0%,
-        #6b4a04a6 100%
-      );
-      z-index: 2;
-    }
-
-    .carousel-item img {
-      height: 100vh;
-      object-fit: cover;
-    }
-
-    .carousel-caption-custom {
-      top: 50%;
-      transform: translateY(-50%);
-      bottom: auto;
-      z-index: 2;
-    }
-
-    .carousel-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1; 
-    }
-
-    body {
-      padding-top: 0;
-    }
-
-    /* Custom floating navbar */
+    /* NAVBAR */
     .custom-navbar {
       position: fixed;
       top: 20px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      background-color: rgba(24, 15, 0, 0.85);
+      transform: translate(-50%, -120%);
+      width: 92%;
+      max-width: 1100px;
+      background: var(--nav-bg);
       border-radius: 12px;
-      padding: 10px 20px;
-      z-index: 1000;
-      transition: all 0.3s ease;
+      padding: .6rem 1rem;
+      z-index: 1050;
+      transition: transform .45s ease, opacity .35s ease, padding .25s ease, background-color .25s ease;
+      opacity: 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     }
+    .custom-navbar.show { transform: translate(-50%, 0); opacity: 1; }
+    .custom-navbar.navbar-fixed.shrink { padding: .32rem .8rem; background: rgba(24,15,0,0.95); }
+    .custom-navbar .navbar-brand img { height: 40px; transition: height .25s ease; }
+    .custom-navbar.navbar-fixed.shrink .navbar-brand img { height: 32px; }
 
-    .navbar-fixed.shrink {
-      padding: 5px 15px; 
-      background-color: rgba(24, 15, 0, 0.95);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
+    /* HERO */
+    #home { position: relative; overflow: hidden; }
+    .hero-carousel { --hero-min-height: min(85vh, 900px); }
 
-    .navbar-fixed.shrink img {
-      height: 32px;
-      transition: height 0.3s ease;
-    }
-
-    /* About Section */
-    .about-section {
+    /* Keep .carousel-item controlled by Bootstrap. Put layout into inner .hero-slide */
+    .hero-slide {
+      min-height: var(--hero-min-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3.5rem 1rem;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
       position: relative;
-      background: linear-gradient(
-        to bottom,
-        rgba(253, 251, 245, 0.95) 0%,
-        rgba(253, 251, 245, 1) 100%
-      ), url('/public/00289861w1500pixel.jpg') no-repeat bottom right;
-      background-size: 500px;
+      box-sizing: border-box;
     }
 
-    .about-section::before {
+    .hero-slide::before {
       content: "";
       position: absolute;
-      top: -100px;
-      left: 0;
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(to bottom, #6b4a04a6, rgba(107, 74, 4, 0));
-      z-index: 0;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 1;
     }
+
+    /* brown bottom tint (per-slide) */
+    .hero-slide::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 140px;
+      background: linear-gradient(to bottom, rgba(253,251,245,0) 0%, rgba(107,74,4,0.65) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .carousel-caption-custom {
+      position: relative;
+      z-index: 2;
+      margin: 0 auto;
+      max-width: 900px;
+      width: 100%;
+      padding: 0 1rem 1.5rem;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .6rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .carousel-caption-custom h1 { margin:0; font-size: clamp(1.4rem, 3.8vw, 3rem); line-height:1.05; }
+    .carousel-caption-custom p { margin:0; max-width:60ch; font-size: clamp(.95rem,1.7vw,1.25rem); }
+
+    .hero-logo-img { max-height:80px; width:auto; display:inline-block; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.45)); }
+
+    .carousel-indicators { bottom: 1.25rem; z-index: 4; }
+    .carousel-control-prev, .carousel-control-next { z-index: 5; }
+
+    /* SVG divider */
+    .svg-divider { display:block; width:100%; line-height:0; margin-top: -4px; }
+
+    /* ABOUT */
+    .about-layout{
+      background: linear-gradient(to bottom, rgba(253,251,245,0.95), rgba(253,251,245,1));
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+      position: relative;
+      overflow: visible;
+    }
+    .subtitle { font-size:.95rem; color:var(--text-dark); margin-bottom: .25rem; }
+    .title { font-size: clamp(1.5rem, 3.5vw, 2.4rem); color:var(--text-dark); margin-bottom: 1.25rem; }
+
+    .about-image-grid{ position: relative; max-width: 520px; margin-left: auto; }
+    .about-image-grid .main-img{ width:100%; max-width:420px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); display:block; }
+    .about-image-grid .side-img{ position:absolute; top:8%; right:-6%; width:180px; transform:rotate(-3deg); border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+
+    @media(max-width:991.98px){
+      .about-image-grid{ max-width:100%; margin:0 auto 1.5rem; text-align:center; }
+      .about-image-grid .side-img{ position:relative; display:inline-block; margin-top:-2rem; right:0; transform:none; width:38%; }
+    }
+
+    .floral{ position:absolute; bottom:2rem; right:3rem; width:120px; opacity:.85; pointer-events:none; }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){ * { transition: none !important; animation: none !important; } }
+
+    /* visually hidden utility */
+    .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   </style>
 </head>
-<body>
+<>
 
   <!-- Floating Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" id="mainNavbar">
-    <a class="navbar-brand" href="#home">
-      <img src="/public/zahira logo kecil.png" alt="zahira-logo" style="height: 40px;">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about-section">About Us</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Our Business</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" id="mainNavbar" role="navigation" aria-label="Primary">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand" href="#home">
+        <img src="/public/zahira logo kecil.png" alt="Zahira logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Our Business</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="home">
-    <div id="heroCarousel" class="carousel slide" data-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#heroCarousel" data-slide-to="1"></li>
-        <li data-target="#heroCarousel" data-slide-to="2"></li>
-      </ol>
+  <!-- HERO -->
+  <section id="home" aria-roledescription="carousel" class="hero-carousel" data-bs-ride="carousel">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img class="d-block w-100" src="/public/home-hero-11.jpg" alt="Spa Background 1">
-          <div class="carousel-caption carousel-caption-custom d-none d-md-block">
-            <h1 class="display-4 font-weight-bold">Spa Consulting & Training</h1>
-            <p class="lead">Rejuvenate your body and mind with our expert services.</p>
-            <a href="#contact" class="btn btn-warning text-white">Contact Us</a>
+          <div class="hero-slide" style="background-image: url('/public/home-hero-11.jpg');">
+            <div class="container">
+              <div class="carousel-caption-custom text-center">
+                <div class="hero-logo mb-2">
+                  <img src="/public/zahira logo kecil.png" alt="Zahira logo" class="hero-logo-img">
+                </div>
+                <h1 class="fw-bold">Spa Consulting &amp; Training</h1>
+                <p class="lead">Rejuvenate your body and mind with our expert services.</p>
+                <a class="btn btn-warning btn-lg text-white" href="#contact">Contact Us</a>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="carousel-item">
-          <img class="d-block w-100" src="/public/home-hero-bg-2.jpg" alt="Spa Background 2">
-          <div class="carousel-caption carousel-caption-custom d-none d-md-block">
-            <h1 class="display-4 font-weight-bold">Expert Trainers and Professionals</h1>
-            <p class="lead">Learn from the best in the industry.</p>
-            <a href="#contact" class="btn btn-warning text-white">Our Programs</a>
+          <div class="hero-slide" style="background-image: url('/public/home-hero-bg-2.jpg');">
+            <div class="container">
+              <div class="carousel-caption-custom text-center">
+                <h1 class="fw-bold">Expert Trainers and Professionals</h1>
+                <p class="lead">Learn from the best in the industry.</p>
+                <a class="btn btn-warning btn-lg text-white" href="#services">Our Programs</a>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="carousel-item">
-          <img class="d-block w-100" src="/public/home-hero-bg-3.jpg" alt="Spa Background 3">
-          <div class="carousel-caption carousel-caption-custom d-none d-md-block">
-            <h1 class="display-4 font-weight-bold">Grow Your Spa Business</h1>
-            <p class="lead">Custom consulting to help you succeed.</p>
-            <a href="#contact" class="btn btn-warning text-white">Get a Quote</a>
+          <div class="hero-slide" style="background-image: url('/public/home-hero-bg-3.jpg');">
+            <div class="container">
+              <div class="carousel-caption-custom text-center">
+                <h1 class="fw-bold">Grow Your Spa Business</h1>
+                <p class="lead">Custom consulting to help you succeed.</p>
+                <a class="btn btn-warning btn-lg text-white" href="#contact">Get a Quote</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
   </section>
 
-  <!-- About Us -->
-  <section id="about-section" class="about-section">
+  <!-- SVG curved divider -->
+  <div class="svg-divider" aria-hidden="true">
+    <svg viewBox="0 0 1200 100" preserveAspectRatio="none" width="100%" height="100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 C300,80 900,80 1200,0 L1200,100 L0,100 Z" fill="#fdfbf5"></path>
+    </svg>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" class="about-layout" aria-labelledby="aboutTitle">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-lg-6">
-          <img src="/public/about-us-main.jpg" alt="Team discussing work" class="img-fluid rounded shadow-lg">
-        </div>
-        <div class="col-lg-6">
-          <h4 class="text-muted">About Us</h4>
-          <h2 class="font-weight-bold mb-4">Zahira Spa Consulting & Training</h2>
-          <div class="d-flex mb-4">
-            <img src="/public/about-us-small-1.jpg" alt="Spa service" class="img-fluid rounded shadow mr-3" style="width: 120px; height: 120px; object-fit: cover;">
-            <img src="/public/about-us-small-2.jpg" alt="Another spa service" class="img-fluid rounded shadow" style="width: 120px; height: 120px; object-fit: cover;">
+        <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+          <div class="about-image-grid" aria-hidden="true">
+            <img src="../public/about-us-3.png"
+                 alt="Zahira team training session"
+                 class="main-img img-fluid rounded shadow"
+                 loading="lazy" decoding="async">
+            <img src="../public/about-us.png"
+                 alt="Trainer demonstrating technique"
+                 class="side-img img-fluid rounded shadow"
+                 loading="lazy" decoding="async">
           </div>
-          <p>
-            The establishment of Zahira began with the rapid growth of the spa, salon, and skin care center business. However, there was no training center or professional consulting services available in this field. Therefore, with our many years of experience, we wanted to open a training and skin care center...
-          </p>
-          <a href="#contact" class="btn btn-warning text-white mt-3">Contact Us</a>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left">
+          <h5 class="subtitle">About Us</h5>
+          <h2 id="aboutTitle" class="title">Zahira Spa Consulting &amp; Training</h2>
+
+          <div class="about-text">
+            <p>
+              Zahira was born from rapid industry growth and a lack of formal training or professional consulting
+              for spa, salon and skin-care businesses. With years of hands-on experience, we deliver practical
+              training, tailored consulting, and hands-on support to help spa owners and professionals succeed.
+            </p>
+
+            <p>
+              Our services include in-house training, operational audits, menu development, customer experience design,
+              and business coaching — all delivered by industry-experienced professionals.
+            </p>
+
+            <p class="mb-4">
+              <strong>Want to learn more?</strong> Book a free consultation and discover how we can help your business grow.
+            </p>
+
+            <a href="#contact" class="btn btn-warning btn-lg text-white" aria-label="Contact Zahira">Contact Us</a>
+          </div>
         </div>
       </div>
+
+      <img src="..\/public\/floral-decoration.png" alt="" role="presentation" class="floral d-none d-lg-block" loading="lazy" aria-hidden="true">
+    </div>
+  </section>
+
+  <!-- Services / Contact placeholders -->
+  <section id="services" class="py-5">
+    <div class="container">
+      <h3>Our Business</h3>
+      <p class="text-muted">(Services overview — replace with real content.)</p>
+    </div>
+  </section>
+
+  <section id="contact" class="py-5 bg-light">
+    <div class="container">
+      <h3>Contact Us</h3>
+      <p class="text-muted">Contact form or contact details go here.</p>
     </div>
   </section>
 
   <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script> 
 
-  <!-- Navbar Scroll Script -->
+  <!-- Lenis smooth scrolling (optional) -->
+    <script>
+    // Initialize Lenis
+  const lenis = new Lenis({
+    autoRaf: true,
+  });
+  
+  // Listen for the scroll event and log the event data
+  lenis.on('scroll', (e) => {
+    console.log(e);
+  });
+  </script>
   <script>
-    window.addEventListener("scroll", function() {
-      const navbar = document.getElementById("mainNavbar");
-      const hero = document.getElementById("home");
-      const heroHeight = hero.offsetHeight;
-
-      if (window.scrollY > heroHeight - 80) {
-        navbar.classList.add("navbar-fixed");
-      } else {
-        navbar.classList.remove("navbar-fixed");
+    // Navbar show/hide on scroll (debounced via rAF)
+    (function(){
+      const navbar = document.getElementById('mainNavbar');
+      const offsetShow = 50; const offsetShrink = 120;
+      const divider = document.querySelector('.svg-divider');
+      let lastY = 0, ticking = false;
+      function updateOnScroll(){
+        const y = lastY;
+        if (y > offsetShow) navbar.classList.add('show','navbar-fixed'); else navbar.classList.remove('show','navbar-fixed');
+        if (y > offsetShrink) { navbar.classList.add('shrink'); divider && divider.classList.add('show'); }
+        else { navbar.classList.remove('shrink'); divider && divider.classList.remove('show'); }
       }
+      window.addEventListener('scroll', function(){ lastY = window.scrollY; if (!ticking) { window.requestAnimationFrame(function(){ updateOnScroll(); ticking = false; }); ticking = true; }}, { passive: true });
+    })();
 
-      if (window.scrollY > 80) {
-        navbar.classList.add("shrink");
-      } else {
-        navbar.classList.remove("shrink");
-      }
+    // Init AOS
+    document.addEventListener('DOMContentLoaded', function(){ if (window.AOS) AOS.init({ duration: 900, once: true });
+      // Pause carousel if user prefers reduced motion
+      try { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const el = document.getElementById('heroCarousel'); if (el) bootstrap.Carousel.getOrCreateInstance(el).pause();
+      }} catch(e){}
     });
   </script>
-
+  
 </body>
 </html>
