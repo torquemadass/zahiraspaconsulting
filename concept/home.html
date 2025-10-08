@@ -21,13 +21,34 @@
       --brand-yellow: #d9c76a;
       --bg-about: #fdfbf5;
       --text-dark: #222;
-      --nav-bg: rgba(24,15,0,0.85);
+      --nav-bg: rgba(24,15,0,0.92);
+      --accent-gold: #e7b933;
+      --accent-dark: rgba(24,15,0,0.9);
+      --about-card: rgba(255,255,255,0.96);
     }
 
     html { scroll-behavior: smooth; }
-    body { background: white; }
+    body { background: white; margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 
-    /* NAVBAR */
+    /* HERO full-height handling */
+    .hero-carousel,
+    .carousel-inner,
+    .carousel-item,
+    .hero-slide {
+      min-height: 640px;
+      height: 100%;
+    }
+    /* prefer dynamic viewport height when supported */
+    @supports (height: 100dvh) {
+      .hero-carousel,
+      .carousel-inner,
+      .carousel-item,
+      .hero-slide {
+        height: 100dvh;
+      }
+    }
+
+    /* NAVBAR (floating) */
     .custom-navbar {
       position: fixed;
       top: 20px;
@@ -41,20 +62,16 @@
       z-index: 1050;
       transition: transform .45s ease, opacity .35s ease, padding .25s ease, background-color .25s ease;
       opacity: 0;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.14);
     }
     .custom-navbar.show { transform: translate(-50%, 0); opacity: 1; }
-    .custom-navbar.navbar-fixed.shrink { padding: .32rem .8rem; background: rgba(24,15,0,0.95); }
+    .custom-navbar.navbar-fixed.shrink { padding: .32rem .8rem; background: rgba(24,15,0,0.97); }
     .custom-navbar .navbar-brand img { height: 40px; transition: height .25s ease; }
     .custom-navbar.navbar-fixed.shrink .navbar-brand img { height: 32px; }
 
-    /* HERO */
+    /* HERO / carousel slides */
     #home { position: relative; overflow: hidden; }
-    .hero-carousel { --hero-min-height: min(85vh, 900px); }
-
-    /* Keep .carousel-item controlled by Bootstrap. Put layout into inner .hero-slide */
     .hero-slide {
-      min-height: var(--hero-min-height);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -66,30 +83,47 @@
       box-sizing: border-box;
     }
 
+    /*
+      overlay: uses a subtle vertical gradient so the top remains dark (good contrast for headings)
+      and fades toward the bottom so the cream fade underneath can show through.
+    */
     .hero-slide::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,.45);
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.56) 0%,
+        rgba(0,0,0,0.44) 30%,
+        rgba(0,0,0,0.28) 55%,
+        rgba(0,0,0,0.06) 85%,
+        rgba(0,0,0,0) 100%
+      );
       z-index: 1;
+      pointer-events: none;
     }
 
-    /* brown bottom tint (per-slide) */
+    /*
+      cream + subtle gold wash at the very bottom to blend into the about section.
+      z-index:2 so it's above the overlay gradient's translucent bottom; captions must be z-index:3.
+    */
     .hero-slide::after {
       content: "";
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 140px;
-      background: linear-gradient(to bottom, rgba(253,251,245,0) 0%, rgba(107,74,4,0.65) 100%);
-      z-index: 1;
+      height: 160px;
+      background:
+        linear-gradient(to bottom, rgba(253,251,245,0) 0%, rgba(253,251,245,1) 85%),
+        linear-gradient(to bottom, rgba(217,199,106,0.06), rgba(217,199,106,0.06));
+      z-index: 2;
       pointer-events: none;
     }
 
     .carousel-caption-custom {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       margin: 0 auto;
       max-width: 900px;
       width: 100%;
@@ -107,80 +141,189 @@
 
     .hero-logo-img { max-height:80px; width:auto; display:inline-block; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.45)); }
 
-    .carousel-indicators { bottom: 1.25rem; z-index: 4; }
-    .carousel-control-prev, .carousel-control-next { z-index: 5; }
+    .carousel-indicators { bottom: 1.25rem; z-index: 6; }
+    .carousel-control-prev, .carousel-control-next { z-index: 6; }
 
     /* SVG divider */
     .svg-divider { display:block; width:100%; line-height:0; margin-top: -4px; }
+    .svg-divider path { fill: var(--bg-about); } /* ensure divider matches about background */
 
-    /* ABOUT */
-    .about-layout{
-      background: linear-gradient(to bottom, rgba(253,251,245,0.95), rgba(253,251,245,1));
+    /* ========== ABOUT section styling & decorations ========== */
+    .about-layout {
+      background:
+        radial-gradient(1200px 200px at 8% 12%, rgba(217,199,106,0.06), transparent 10%),
+        linear-gradient(180deg, rgba(253,251,245,1) 0%, rgba(250,247,238,1) 100%);
       padding-top: 4.5rem;
       padding-bottom: 4.5rem;
       position: relative;
       overflow: visible;
     }
-    .subtitle { font-size:.95rem; color:var(--text-dark); margin-bottom: .25rem; }
-    .title { font-size: clamp(1.5rem, 3.5vw, 2.4rem); color:var(--text-dark); margin-bottom: 1.25rem; }
+
+    .about-accent-wrap { display:flex; align-items:flex-start; gap:1rem; }
+    .about-accent {
+      width: 6px;
+      height: 48px;
+      background: linear-gradient(180deg, var(--accent-gold), #d3a21e);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(215,154,12,0.12);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .about-card {
+      position: relative;
+      background: var(--about-card);
+      padding: 1.15rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+      border: 1px solid rgba(210,180,80,0.06);
+      margin-top: .6rem;
+    }
+
+    .about-flourish {
+      position:absolute;
+      left: -40px;
+      top: -28px;
+      width: 120px;
+      height: 120px;
+      opacity: .12;
+      pointer-events:none;
+      transform: rotate(-8deg);
+    }
+
+    .feature-row {
+      display:flex;
+      gap: 0.75rem 1.25rem;
+      margin-top: 1rem;
+      flex-wrap:wrap;
+    }
+    .feature {
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      font-size:.95rem;
+      color: #222;
+    }
+    .feature .icon {
+      width:36px;
+      height:36px;
+      flex-shrink:0;
+      display:inline-grid;
+      place-items:center;
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(231,185,51,0.16), rgba(231,185,51,0.06));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    /* Image column padding so side-image doesn't touch text */
+    .image-col { padding-right: 2.5rem; }
 
     .about-image-grid{ position: relative; max-width: 520px; margin-left: auto; }
     .about-image-grid .main-img{ width:100%; max-width:420px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); display:block; }
-    .about-image-grid .side-img{ position:absolute; top:8%; right:-6%; width:180px; transform:rotate(-3deg); border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+    .about-image-grid .side-img{ position:absolute; top:6%; right:-18px; width:170px; transform:rotate(-3deg); border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
 
-    @media(max-width:991.98px){
-      .about-image-grid{ max-width:100%; margin:0 auto 1.5rem; text-align:center; }
-      .about-image-grid .side-img{ position:relative; display:inline-block; margin-top:-2rem; right:0; transform:none; width:38%; }
+    /* make sure the text column sits above images */
+    .about-text { position: relative; z-index: 3; }
+
+    /* Responsive adjustments */
+    @media (max-width: 991.98px) {
+      .image-col { padding-right: 0; }
+      .about-image-grid { max-width: 100%; margin: 0 auto 1.25rem; text-align:center; }
+      .about-image-grid .side-img {
+        position: relative;
+        display: inline-block;
+        margin-top: -2rem;
+        right: 0;
+        transform: none;
+        width: 38%;
+      }
+      .about-flourish { display: none; }
     }
 
-    .about-image-grid { position: relative; max-width: 520px; margin-left: auto; }
+    /* small util */
+    .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* make sure the text column sits above images */
-.about-text { position: relative; z-index: 2; }
+    /* small tweak to spacing for long hero captions on narrow screens */
+    @media (max-width: 420px) {
+      .carousel-caption-custom { padding-bottom: 2.5rem; }
+    }
 
-/* lower the amount the side image pokes out on large screens,
-   and give the left column padding so it doesn't collide with text */
-@media (min-width: 992px) {
-  /* give the image column breathing room on the right */
-  .image-col { padding-right: 3.25rem; /* tweak as needed (32px) */ }
-
-  /* keep side image overlapping the main image, but not reach the text */
-  .about-image-grid .side-img {
-    right: -18px;      /* smaller negative offset than -6% so it won't invade text */
-    top: 6%;           /* slightly nudge vertically if needed */
-    width: 170px;      /* consistent size */
-    transform: rotate(-3deg);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  }
-
-  /* slightly scale the main image so overlap looks intentional */
-  .about-image-grid .main-img {
-    transform: translateZ(0); /* improve rendering */
-  }
+    /* Services / card-grid styles */
+.services-hero {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  background: linear-gradient(180deg, rgba(250,247,238,0.95), rgba(253,251,245,1));
 }
 
-/* on medium / small screens we stack images above text */
-@media (max-width: 991.98px) {
-  .image-col { padding-right: 0; } /* no extra padding on mobile */
-  .about-image-grid .side-img {
-    position: relative;
-    right: 0;
-    top: 0;
-    width: 38%;
-    transform: none;
-    margin-top: -2rem;
-    display: inline-block;
-  }}
+.services-header { text-align: center; margin-bottom: 1.5rem; }
+.services-sub { color: var(--text-dark); opacity: .85; max-width: 64ch; margin: 0 auto 1rem; }
 
-    .floral{ position:absolute; bottom:2rem; right:3rem; width:120px; opacity:.85; pointer-events:none; }
+.service-grid { display: grid; grid-template-columns: repeat(1,1fr); gap: 1.25rem; }
+@media(min-width: 576px){ .service-grid { grid-template-columns: repeat(2,1fr); } }
+@media(min-width: 992px){ .service-grid { grid-template-columns: repeat(3,1fr); } }
 
-    /* reduced motion */
-    /* @media (prefers-reduced-motion: reduce){ * { transition: none !important; animation: none !important; } } */
+.service-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.15rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border: 1px solid rgba(210,180,80,0.05);
+  display:flex;
+  flex-direction:column;
+  gap: .75rem;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.service-card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(0,0,0,0.09); }
 
-    /* visually hidden utility */
-    .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.service-icon {
+  width:52px;
+  height:52px;
+  border-radius:10px;
+  display:inline-grid;
+  place-items:center;
+  flex-shrink:0;
+  background: linear-gradient(180deg, rgba(231,185,51,0.16), rgba(231,185,51,0.06));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+.service-title { font-size: 1.1rem; margin:0; color:var(--accent-dark); }
+.service-desc { color: #333; opacity: .92; font-size:.98rem; margin:0; }
+
+.service-actions { margin-top:auto; display:flex; gap:.6rem; align-items:center; }
+.service-cta {
+  display:inline-block;
+  padding:.5rem .9rem;
+  border-radius:10px;
+  font-weight:600;
+  background: linear-gradient(180deg,var(--brand-yellow), #d3a21e);
+  color: #111;
+  text-decoration:none;
+  box-shadow: 0 6px 20px rgba(217,199,106,0.12);
+  transition: transform .14s ease;
+}
+.service-cta:active,.service-cta:focus { transform: translateY(1px); outline: none; }
+.small-link { color: rgba(0,0,0,0.6); font-size:.9rem; text-decoration:underline; }
+
+/* Floating WhatsApp button */
+.wa-float {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(180deg, #25D366 0%, #159b3b 100%);
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  display: inline-grid;
+  place-items: center;
+  z-index: 1100;
+  text-decoration: none;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.wa-float:active { transform: translateY(2px); }
+
   </style>
 </head>
+<body>
 
   <!-- Floating Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" id="mainNavbar" role="navigation" aria-label="Primary">
@@ -206,7 +349,6 @@
   <!-- HERO -->
   <section id="home" aria-roledescription="carousel" class="hero-carousel" data-bs-ride="carousel">
     <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
-
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -223,7 +365,8 @@
                 </div>
                 <h1 class="fw-bold">Spa Consulting &amp; Training</h1>
                 <p class="lead">Rejuvenate your body and mind with our expert services.</p>
-                <a class="btn btn-warning btn-lg text-white" href="#contact">Contact Us</a>
+                <!-- WhatsApp quick link - change the number if needed -->
+                <a class="btn btn-warning btn-lg text-white contact-wa" href="https://wa.me/628170060996" id="contactPrimary" target="_blank" rel="noopener noreferrer">Contact Us</a>
               </div>
             </div>
           </div>
@@ -235,7 +378,7 @@
               <div class="carousel-caption-custom text-center">
                 <h1 class="fw-bold">Expert Trainers and Professionals</h1>
                 <p class="lead">Learn from the best in the industry.</p>
-                <a class="btn btn-warning btn-lg text-white" href="#services">Our Programs</a>
+                <a class="btn btn-warning btn-lg text-white contact-wa" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">Our Programs</a>
               </div>
             </div>
           </div>
@@ -247,7 +390,7 @@
               <div class="carousel-caption-custom text-center">
                 <h1 class="fw-bold">Grow Your Spa Business</h1>
                 <p class="lead">Custom consulting to help you succeed.</p>
-                <a class="btn btn-warning btn-lg text-white" href="#contact">Get a Quote</a>
+                <a class="btn btn-warning btn-lg text-white contact-wa" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">Get a Quote</a>
               </div>
             </div>
           </div>
@@ -272,108 +415,337 @@
     </svg>
   </div>
 
-  <!-- ABOUT -->
+  <!-- ABOUT - decorated -->
   <section id="about" class="about-layout" aria-labelledby="aboutTitle">
-    <div class="container">
+    <div class="container position-relative">
+      <!-- Decorative subtle SVG flourish -->
+      <svg class="about-flourish" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <path d="M10 60 C 25 20, 75 20, 90 60" fill="none" stroke="#d9c76a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20 70 C 40 40, 60 40, 80 70" fill="none" stroke="#e7b933" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+
       <div class="row align-items-center">
+        <!-- Images column -->
         <div class="col-lg-6 mb-4 mb-lg-0 image-col" data-aos="fade-right">
           <div class="about-image-grid" aria-hidden="true">
-            <img src="../public/about-us-3.png"
+            <img src="/public/about-us-3.png"
+                 srcset="/public/about-us-3.png 600w, /public/about-us-3.png 1200w"
+                 sizes="(max-width: 992px) 80vw, 420px"
                  alt="Zahira team training session"
                  class="main-img img-fluid rounded shadow"
                  loading="lazy" decoding="async">
-            <img src="../public/about-us.png"
+            <img src="/public/about-us.png"
+                 srcset="/public/about-us.png 360w, /public/about-us.png 720w"
+                 sizes="180px"
                  alt="Trainer demonstrating technique"
                  class="side-img img-fluid rounded shadow"
                  loading="lazy" decoding="async">
           </div>
         </div>
 
+        <!-- Text column -->
         <div class="col-lg-6" data-aos="fade-left">
-          <h5 class="subtitle">About Us</h5>
-          <h2 id="aboutTitle" class="title">Zahira Spa Consulting &amp; Training</h2>
+          <div class="about-accent-wrap">
+            <div class="about-accent" aria-hidden="true"></div>
 
-          <div class="about-text">
-            <p>
-              Zahira was born from rapid industry growth and a lack of formal training or professional consulting
-              for spa, salon and skin-care businesses. With years of hands-on experience, we deliver practical
-              training, tailored consulting, and hands-on support to help spa owners and professionals succeed.
-            </p>
+            <div style="flex:1">
+              <h5 class="subtitle">About Us</h5>
 
-            <p>
-              Our services include in-house training, operational audits, menu development, customer experience design,
-              and business coaching — all delivered by industry-experienced professionals.
-            </p>
+              <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+                <span class="badge-year visually-hidden">Since 2015</span>
+                <h2 id="aboutTitle" class="title">Zahira Spa Consulting &amp; Training</h2>
+              </div>
 
-            <p class="mb-4">
-              <strong>Want to learn more?</strong> Book a free consultation and discover how we can help your business grow.
-            </p>
+              <div class="about-card about-text">
+                <p>
+                  Zahira was born from rapid industry growth and a lack of formal training or professional consulting
+                  for spa, salon and skin-care businesses. With years of hands-on experience, we deliver practical
+                  training, tailored consulting, and hands-on support to help spa owners and professionals succeed.
+                </p>
 
-            <a href="#contact" class="btn btn-warning btn-lg text-white" aria-label="Contact Zahira">Contact Us</a>
-          </div>
+                <p>
+                  Our services include in-house training, operational audits, menu development, customer experience design,
+                  and business coaching — all delivered by industry-experienced professionals.
+                </p>
+
+                <p class="mb-0"><strong>Want to learn more?</strong> Book a free consultation and discover how we can help your business grow.</p>
+
+                <!-- features row -->
+                <div class="feature-row" role="list" aria-label="Key services">
+                  <div class="feature" role="listitem">
+                    <span class="icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 2 L20 8 L12 14 L4 8 L12 2 Z"></path>
+                        <path d="M12 14 L12 22"></path>
+                      </svg>
+                    </span>
+                    <span>Hands-on Training</span>
+                  </div>
+
+                  <div class="feature" role="listitem">
+                    <span class="icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.28 17.9l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09c.7 0 1.3-.4 1.51-1a1.65 1.65 0 0 0-.33-1.82L4.3 6.28A2 2 0 0 1 7.13 3.45l.06.06A1.65 1.65 0 0 0 9 3.82c.6 0 1.1.34 1.33.82A1.65 1.65 0 0 0 12 5"></path>
+                      </svg>
+                    </span>
+                    <span>Operational Audits</span>
+                  </div>
+
+                  <div class="feature" role="listitem">
+                    <span class="icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M7 13l3-3 4 4 7-7"></path>
+                      </svg>
+                    </span>
+                    <span>Business Coaching</span>
+                  </div>
+                </div>
+
+                <div class="mt-3">
+                  <!-- same WhatsApp link -->
+                  <a href="https://wa.me/628170060996" class="btn btn-warning btn-lg text-white contact-wa" target="_blank" rel="noopener noreferrer" aria-label="Contact Zahira">Contact Us</a>
+                </div>
+              </div> <!-- .about-card -->
+            </div> <!-- flex content -->
+          </div> <!-- about-accent-wrap -->
         </div>
       </div>
 
-      <img src="..\/public\/floral-decoration.png" alt="" role="presentation" class="floral d-none d-lg-block" loading="lazy" aria-hidden="true">
+      <img src="/public/floral-decoration.png" alt="" role="presentation" class="floral d-none d-lg-block" loading="lazy" aria-hidden="true">
     </div>
   </section>
 
   <!-- Services / Contact placeholders -->
-  <section id="services" class="py-5">
-    <div class="container">
-      <h3>Our Business</h3>
-      <p class="text-muted">(Services overview — replace with real content.)</p>
+  <section id="services" class="services-hero" aria-labelledby="servicesTitle">
+  <div class="container">
+    <div class="services-header">
+      <h3 id="servicesTitle" class="fw-bold">Our Business</h3>
+      <p class="services-sub">Practical training, operational consulting and business coaching — designed to lift your spa's service, systems, and revenue.</p>
     </div>
-  </section>
+
+    <div class="service-grid" role="list">
+      <!-- Card 1 -->
+      <article class="service-card" role="listitem" data-aos="fade-up">
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <div class="service-icon" aria-hidden="true">
+            <!-- small SVG: hands-on -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 20h20"></path>
+              <path d="M7 20v-6a5 5 0 0 1 10 0v6"></path>
+              <path d="M12 4v6"></path>
+            </svg>
+          </div>
+          <h4 class="service-title">Hands-on Training</h4>
+        </div>
+        <p class="service-desc">Practical, on-site training for therapists and staff — protocols, customer care, and menu delivery that convert.</p>
+        <div class="service-actions">
+          <a class="service-cta contact-wa" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">Book Training</a>
+          <a class="small-link" href="#contact">Learn more</a>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="service-card" role="listitem" data-aos="fade-up" data-aos-delay="80">
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <div class="service-icon" aria-hidden="true">
+            <!-- small SVG: audit/gear -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"></path>
+            </svg>
+          </div>
+          <h4 class="service-title">Operational Audits</h4>
+        </div>
+        <p class="service-desc">We audit operations, menu pricing and guest flow, then deliver a prioritized plan you can action immediately.</p>
+        <div class="service-actions">
+          <a class="service-cta contact-wa" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">Request Audit</a>
+          <a class="small-link" href="#contact">View sample</a>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="service-card" role="listitem" data-aos="fade-up" data-aos-delay="160">
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <div class="service-icon" aria-hidden="true">
+            <!-- small SVG: coaching/growth -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b4a04" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"></path>
+              <path d="M7 13l3-3 4 4 7-7"></path>
+            </svg>
+          </div>
+          <h4 class="service-title">Business Coaching</h4>
+        </div>
+        <p class="service-desc">Weekly coaching and KPIs to help you implement changes, measure impact and grow sustainably.</p>
+        <div class="service-actions">
+          <a class="service-cta contact-wa" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">Start Coaching</a>
+          <a class="small-link" href="#contact">See plans</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 
   <section id="contact" class="py-5 bg-light">
-    <div class="container">
-      <h3>Contact Us</h3>
-      <p class="text-muted">Contact form or contact details go here.</p>
+  <div class="container">
+    <div class="row align-items-start">
+      <div class="col-lg-6 mb-4">
+        <h3>Contact Us</h3>
+        <p class="text-muted">Prefer WhatsApp? Tap the button to start a chat — or use the quick form to send a message instantly.</p>
+
+        <ul class="list-unstyled">
+          <li><strong>Phone (WhatsApp):</strong> <a href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer">+62 817 006 0996</a></li>
+          <li><strong>Email:</strong> <a href="mailto:zahiraspaconsulting@gmail.com">zahiraspaconsulting@gmail.com</a></li>
+          <li><strong>Hours:</strong> Mon–Fri 09:00–17:00</li>
+        </ul>
+
+        <p class="mt-3">
+          <a class="btn btn-warning contact-wa" href="https://wa.me/628170060996?text=Hi%20Zahira%20team%2C%20I%27d%20like%20to%20talk%20about%20your%20services." target="_blank" rel="noopener noreferrer">
+            Chat on WhatsApp
+          </a>
+        </p>
+      </div>
+
+      <div class="col-lg-6">
+        <h5 class="mb-3">Quick WhatsApp Message</h5>
+
+        <form id="contactForm" class="mb-0" autocomplete="on">
+          <div class="mb-2">
+            <label for="c_name" class="form-label visually-hidden">Name</label>
+            <input id="c_name" name="name" class="form-control" placeholder="Your name" required>
+          </div>
+
+          <div class="mb-2">
+            <label for="c_phone" class="form-label visually-hidden">Phone (optional)</label>
+            <input id="c_phone" name="phone" class="form-control" placeholder="Phone (optional)">
+          </div>
+
+          <div class="mb-2">
+            <label for="c_msg" class="form-label visually-hidden">Message</label>
+            <textarea id="c_msg" name="message" rows="4" class="form-control" placeholder="Your message (brief)"></textarea>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning">Send via WhatsApp</button>
+            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </form>
+
+        <small class="text-muted d-block mt-2">We’ll only use your info to respond to this request.</small>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Scripts -->
+<!-- Floating WhatsApp button -->
+<a id="waFloat" class="wa-float d-lg-none" href="https://wa.me/628170060996" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <!-- simple svg icon -->
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:block">
+    <path d="M20.5 3.5L3.5 20.5" stroke="#fff" stroke-width="0"></path>
+    <path d="M20.5 3.5C22.0 5.0 22.7 7.2 21.8 9.1C20.2 12.9 16 16 16 16C16 16 13.1 17 10.6 16.4C8.1 15.8 5.7 14.0 4.2 11.9C3.0 10.2 3.2 8.0 4.7 6.5C6.2 5.0 8.4 4.8 10.1 6.0C11.7 7.2 12.2 8.9 12.2 8.9C12.2 8.9 14.8 6.8 17.5 4.1C19.1 2.5 20.5 3.5 20.5 3.5Z" fill="#25D366"/>
+  </svg>
+</a>
+
+  <!-- Scripts: Bootstrap bundle (includes popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
-  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script> 
 
-  <!-- Lenis smooth scrolling (optional) -->
-    <script>
-    // Initialize Lenis
-  const lenis = new Lenis({
-    autoRaf: true,
-  });
-  
-  // Listen for the scroll event and log the event data
-  lenis.on('scroll', (e) => {
-    console.log(e);
-  });
-  </script>
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+
+  <!-- Lenis (kept) -->
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+
   <script>
-    // Navbar show/hide on scroll (debounced via rAF)
+    // Lenis init (kept as requested)
+    const lenis = new Lenis({ autoRaf: true });
+    lenis.on('scroll', (e) => { /* optional logging: console.log(e); */ });
+
+    // Debounced scroll handler for navbar + divider (works with Lenis or native scroll)
     (function(){
       const navbar = document.getElementById('mainNavbar');
-      const offsetShow = 50; const offsetShrink = 120;
+      const offsetShow = 50, offsetShrink = 120;
       const divider = document.querySelector('.svg-divider');
       let lastY = 0, ticking = false;
+
       function updateOnScroll(){
         const y = lastY;
         if (y > offsetShow) navbar.classList.add('show','navbar-fixed'); else navbar.classList.remove('show','navbar-fixed');
         if (y > offsetShrink) { navbar.classList.add('shrink'); divider && divider.classList.add('show'); }
         else { navbar.classList.remove('shrink'); divider && divider.classList.remove('show'); }
       }
-      window.addEventListener('scroll', function(){ lastY = window.scrollY; if (!ticking) { window.requestAnimationFrame(function(){ updateOnScroll(); ticking = false; }); ticking = true; }}, { passive: true });
+
+      // keep in sync with Lenis if present
+      if (lenis && typeof lenis.raf === 'function') {
+        // Lenis drives requestAnimationFrame; track scroll position
+        function raf(time){
+          lastY = window.scrollY;
+          updateOnScroll();
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      } else {
+        window.addEventListener('scroll', function(){ lastY = window.scrollY; if (!ticking) { window.requestAnimationFrame(function(){ updateOnScroll(); ticking = false; }); ticking = true; }}, { passive: true });
+      }
     })();
-    
-    // Init AOS
-    document.addEventListener('DOMContentLoaded', function(){ if (window.AOS) AOS.init({ duration: 900, once: true });
-      // Pause carousel if user prefers reduced motion
-      try { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const el = document.getElementById('heroCarousel'); if (el) bootstrap.Carousel.getOrCreateInstance(el).pause();
-      }} catch(e){}
+
+    // Init AOS (if loaded)
+    document.addEventListener('DOMContentLoaded', function(){
+      if (window.AOS) AOS.init({ duration: 900, once: true });
+      // Pause carousel for users who prefer reduced motion
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const el = document.getElementById('heroCarousel');
+          if (el) bootstrap.Carousel.getOrCreateInstance(el).pause();
+        }
+      } catch(e) { /* ignore */ }
     });
+
+    // Accessibility: ensure all "contact-wa" links open in new tab safely (already set) — optional JS fallback
+    (function(){
+      document.querySelectorAll('a.contact-wa').forEach(a => {
+        a.setAttribute('rel', 'noopener noreferrer');
+        a.setAttribute('target', '_blank');
+      });
+    })();
   </script>
-  
+  <script>
+  (function(){
+    const WA_NUMBER = '628170060996';
+
+    // Enhance direct .contact-wa links to ensure they have target/_blank (optional safety)
+    document.querySelectorAll('a.contact-wa').forEach(a => {
+      if (!a.href.includes('wa.me')) {
+        // keep existing href but if dev forgot to set wa link, we add a fallback
+        a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(a.textContent.trim())}`;
+      }
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+    });
+
+    // Hook up contact form to open WhatsApp chat with pre-filled message
+    const form = document.getElementById('contactForm');
+    if (form) {
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const name = (form.name && form.name.value.trim()) || '';
+        const phone = (form.phone && form.phone.value.trim()) || '';
+        const msg  = (form.message && form.message.value.trim()) || '';
+        // Build message
+        let text = `Hi Zahira team, I%27d like%20to%20inquire.%0A%0A`;
+        if (name) text += `Name:%20${encodeURIComponent(name)}%0A`;
+        if (phone) text += `Phone:%20${encodeURIComponent(phone)}%0A`;
+        if (msg)  text += `%0AMessage:%20${encodeURIComponent(msg)}`;
+        // Open wa.me in new tab
+        const url = `https://wa.me/${WA_NUMBER}?text=${text}`;
+        window.open(url, '_blank', 'noopener');
+      });
+    }
+
+    // Optional: if you want clicking any .contact-wa to track or toast, add here
+  })();
+</script>
+
 </body>
 </html>
