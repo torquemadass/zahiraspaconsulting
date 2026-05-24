@@ -6,12 +6,24 @@ const DEFAULT_MESSAGE =
 document.getElementById("year").textContent = new Date().getFullYear();
 
 if (window.Lenis) {
-  const lenis = new Lenis({ autoRaf: true });
-  function raf(t) {
-    lenis.raf(t);
-    requestAnimationFrame(raf);
+  const lenis = new Lenis({ 
+    autoRaf: true,
+    smoothTouch: false, // Ensure native touch scrolling on mobile to prevent lag
+  });
+
+  // Completely disable Lenis processing on mobile to save CPU time
+  if (window.innerWidth < 992) {
+    lenis.stop();
   }
-  requestAnimationFrame(raf);
+
+  // Toggle Lenis based on window resize
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 992) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+  });
 }
 
 function initWhatsAppLinks() {
