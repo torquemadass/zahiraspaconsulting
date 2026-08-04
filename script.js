@@ -5,26 +5,23 @@ const DEFAULT_MESSAGE =
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
-if (window.Lenis) {
-  const lenis = new Lenis({ 
+let lenis;
+if (window.Lenis && window.innerWidth >= 992) {
+  lenis = new Lenis({ 
     autoRaf: true,
-    smoothTouch: false, // Ensure native touch scrolling on mobile to prevent lag
-  });
-
-  // Completely disable Lenis processing on mobile to save CPU time
-  if (window.innerWidth < 992) {
-    lenis.stop();
-  }
-
-  // Toggle Lenis based on window resize
-  window.addEventListener('resize', () => {
-    if (window.innerWidth < 992) {
-      lenis.stop();
-    } else {
-      lenis.start();
-    }
+    smoothTouch: false,
   });
 }
+
+// Toggle Lenis based on window resize
+window.addEventListener('resize', () => {
+  if (window.innerWidth < 992 && lenis) {
+    lenis.destroy();
+    lenis = null;
+  } else if (window.innerWidth >= 992 && !lenis && window.Lenis) {
+    lenis = new Lenis({ autoRaf: true, smoothTouch: false });
+  }
+});
 
 function initWhatsAppLinks() {
   const waEls = document.querySelectorAll(".contact-wa");
@@ -272,12 +269,26 @@ function initSmoothAnchors() {
       });
   });
 })();
+function initAboutCollapse() {
+  const collapseEl = document.getElementById("aboutTextCollapse");
+  if (!collapseEl) return;
+  const btnText = document.querySelector(".read-story-btn .btn-text");
+
+  collapseEl.addEventListener("show.bs.collapse", () => {
+    if (btnText) btnText.textContent = "Show Less";
+  });
+
+  collapseEl.addEventListener("hide.bs.collapse", () => {
+    if (btnText) btnText.textContent = "Read Full Story";
+  });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   initWhatsAppLinks();
   initFloatingNavbar();
   initWhatsAppFloat();
   initSmoothAnchors();
+  initAboutCollapse();
 
   const ann = document.createElement("div");
   ann.setAttribute("role", "status");
